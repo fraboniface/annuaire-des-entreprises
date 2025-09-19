@@ -57,7 +57,7 @@ export const uniteLegaleLabel = (uniteLegale: IUniteLegale) => {
   }
 };
 
-export const uniteLegalePageTitle = (uniteLegale: IUniteLegale) => {
+const uniteLegalePartialPageTitle = (uniteLegale: IUniteLegale) => {
   const city =
     uniteLegale.siege.codePostal || uniteLegale.siege.commune
       ? ` à ${uniteLegale.siege.codePostal} ${uniteLegale.siege.commune}`
@@ -65,13 +65,34 @@ export const uniteLegalePageTitle = (uniteLegale: IUniteLegale) => {
 
   return `${capitalize(uniteLegaleLabel(uniteLegale))} ${
     uniteLegale.nomComplet
-  }${city} - SIREN ${formatIntFr(
-    uniteLegale.siren
+  }${city} - SIREN ${formatIntFr(uniteLegale.siren)}`;
+};
+
+export const uniteLegalePageTitle = (uniteLegale: IUniteLegale) => {
+  return `${uniteLegalePartialPageTitle(
+    uniteLegale
   )} | L’Annuaire des Entreprises`;
 };
 
 export const uniteLegalePageDescription = (uniteLegale: IUniteLegale) =>
   `L’administration permet aux particuliers et agents publics de vérifier les informations légales de ${uniteLegale.nomComplet}, ${uniteLegale.siege.adresse} : SIREN, SIRET, TVA Intracommunautaire, Code APE/NAF, dirigeant, adresse, justificatif  d'immatriculation...`;
+
+export const unitesLegalesComparisonPageTitle = (
+  uniteLegale1: IUniteLegale,
+  uniteLegale2: IUniteLegale
+) => {
+  return `Comparaison de ${uniteLegalePartialPageTitle(
+    uniteLegale1
+  )} et de ${uniteLegalePartialPageTitle(
+    uniteLegale2
+  )} | L’Annuaire des Entreprises`;
+};
+
+export const unitesLegalesComparisonPageDescription = (
+  uniteLegale1: IUniteLegale,
+  uniteLegale2: IUniteLegale
+) =>
+  `L’administration permet aux particuliers et agents publics de comparer les informations légales de ${uniteLegale1.nomComplet} et de ${uniteLegale2.nomComplet} : SIREN, Code APE/NAF, adresse...`;
 
 export const etablissementPageDescription = (
   etablissement: IEtablissement,

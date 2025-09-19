@@ -16,11 +16,20 @@ import { NextResponse } from 'next/server';
 const shouldRedirect = (path: string, search: string, url: string) => {
   try {
     if (path.startsWith('/entreprise/')) {
-      const sirenOrSiretSlug = extractSirenOrSiretSlugFromUrl(path);
-      if (isLikelyASiret(sirenOrSiretSlug)) {
-        return new URL(`/etablissement/${sirenOrSiretSlug}`, url);
-      } else if (!isLikelyASiren(sirenOrSiretSlug)) {
-        return new URL(`/404`, url);
+      if (path.includes('/vs/')) {
+        let [siren1, _, siren2] = path.split('/').slice(-3);
+        if (!isLikelyASiren(siren1) && !isLikelyASiren(siren2)) {
+          // we could automatically convert SIRETs to SIRENs
+          // using extractSirenFromSiret(NoVerify)
+          // left to future work
+        }
+      } else {
+        const sirenOrSiretSlug = extractSirenOrSiretSlugFromUrl(path);
+        if (isLikelyASiret(sirenOrSiretSlug)) {
+          return new URL(`/etablissement/${sirenOrSiretSlug}`, url);
+        } else if (!isLikelyASiren(sirenOrSiretSlug)) {
+          return new URL(`/404`, url);
+        }
       }
     }
 

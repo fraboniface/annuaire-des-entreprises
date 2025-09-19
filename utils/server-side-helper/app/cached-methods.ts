@@ -72,6 +72,31 @@ export const cachedGetUniteLegale = cache(
   }
 );
 
+// J'avais simplement utilisé cachedGetUniteLegale au début mais cette nouvelle fonction
+// me permet de contrôler ce qui se passe en cas d'erreur au lieu des redirect par défaut.
+export const cachedGetUnitesLegales = cache(
+  async (siren1: string, siren2: string, isBot: boolean, page = 1) => {
+    const [res1, res2] = await Promise.allSettled([
+      getUniteLegaleFromSlug(siren1, {
+        isBot,
+        page,
+      }),
+      getUniteLegaleFromSlug(siren2, {
+        isBot,
+        page,
+      }),
+    ]);
+
+    const uniteLegale1 = res1.status === 'fulfilled' ? res1.value : null;
+    const uniteLegale2 = res2.status === 'fulfilled' ? res2.value : null;
+
+    // if at least one is rejected we could log res.reason to Sentry
+    // and also possibly use it to adapt the error message
+
+    return { uniteLegale1, uniteLegale2 };
+  }
+);
+
 export const cachedEtablissementWithUniteLegale = cache(
   async (slug: string, isBot: boolean) => {
     const siretSlug = extractSirenOrSiretSlugFromUrl(slug);
